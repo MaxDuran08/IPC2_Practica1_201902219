@@ -1,4 +1,3 @@
-from numpy import append
 from ListaFIFO import ListaFIFO
 from ListaEnlazada import ListaEnlazada
 import time
@@ -23,6 +22,9 @@ class Main():
             elif Opcion==3:
                 self.MenuDesarrollador()
             elif Opcion==0:
+                print(" _____________________")
+                print("| Saliendo...         |")
+                print(" \__________/\__/\___/") 
                 break
             else:
                 pizza="""
@@ -287,24 +289,32 @@ class Main():
         print(" \_________/      \___|")
 
     def MenuDesarrollador(self):
-        print("Ordenes en cola: "+str(self.nOrdenes-1))
+        print("")
+        orden="orden"
+        if (self.nOrdenes-1)!=1:
+            orden="ordenes"
         Actual=self.ListaOrdenes.Primero
         if int(self.nOrdenes-1)>0:
-            print("**=========================================**")
-            print("|| ORDENES:                                ||")
+            print("**=================================================================**")
+            print("|| Hay un total de "+str(self.nOrdenes-1)+" "+str(orden)+" en cola.")
             for i in range(self.nOrdenes-1):
-                print("**=========================================**")
-                print("||                                         ||")
-                print(Actual.Orden)
-                print("Nombre del cliente: "+str(Actual.NombreCliente))
+                print("**=================================================================**")
+                print("||                                                                 ||")
+                print("|| "+str(Actual.Orden))
+                print("|| Nombre del cliente: "+str(Actual.NombreCliente))
                 for i in range(len(Actual.Pizzas)):
-                    print(Actual.Pizzas[i][0])
-                    print("Ingrediente: "+str(Actual.Pizzas[i][1][0]))
-                    print("Minutos de preparado: "+str(Actual.Pizzas[i][1][1]))
-                print("Tiempo de preparacion para las pizzas:"+str(Actual.TiempoOrden))
-                print("Tiempo que paso el usuario haciendo su pedido: "+str(Actual.TiempoPedido*60)+" minutos")
-                print("Se genero el pedido en el minuto: "+str(Actual.HorasEntrada)+":"+str(Actual.MinutosEntrada)+"."+str(Actual.SegundosEntrada))
+                    print("||============================>")
+                    print("|| "+str(Actual.Pizzas[i][0]))
+                    print("|| Ingrediente: "+str(Actual.Pizzas[i][1][0]))
+                    print("|| Minutos de preparado: "+str(Actual.Pizzas[i][1][1]))
+                print("||============================>")
+                print("|| Tiempo de preparacion total para las pizzas: "+str(Actual.TiempoOrden))
+                print("|| Tiempo que paso el cliente tardo haciendo su pedido: "+str(round(Actual.TiempoPedido,2)))
+                print("|| Se genero el pedido en el momento: "+str(Actual.HorasEntrada)+":"+str(Actual.MinutosEntrada)+":"+str(Actual.SegundosEntrada))
                 Actual=Actual.SiguienteOrden
+                print("||                                                                 ||")
+                print("**=================================================================**")
+                
     
     def CalcularSalida(self,O):
         HoraActual=int(time.strftime("%H",time.localtime()))
@@ -317,26 +327,23 @@ class Main():
         minutosPedido=int(Tiempo1)
         segundosPedido=int((Tiempo1-int(Tiempo1))*60)
 
-        SegundosT=SegundoActual+segundosPedido-O.SegundosEntrada
-        MinutosT=MinutoActual+O.TiempoOrden+minutosPedido-O.MinutosEntrada
-        HoraT=HoraActual - O.HorasEntrada
+        SegundosT=int(SegundoActual+segundosPedido-O.SegundosEntrada)
+        MinutosT=int(MinutoActual+O.TiempoOrden+minutosPedido-O.MinutosEntrada)
+        HoraT=int(HoraActual - O.HorasEntrada)
 
-        #print("creacion de pizzas:"+str(O.TiempoOrden))
-        #print("minuto actual-Entrada:"+str(MinutoActual-O.MinutosEntrada))
-        #print(minutosPedido)
-        #print(str(HoraT)+":"+str(MinutosT)+":"+str(SegundosT))
+        while SegundosT>60:
+            MinutosT+=1
+            SegundosT-=60
 
-        while MinutosT>59:
+        while MinutosT>60:
             HoraT+=1
             MinutosT-=60
-            while SegundosT>59:
-                MinutosT+=1
-                SegundosT-=60
-        Hora=""
+        
+        Hora="["
         keyHora=False
         if HoraT>0:
             KeyHora=True
-            if Hora>9:
+            if HoraT>9:
                 Hora+=str(HoraT)+":"
             else:
                 Hora+="0"+str(HoraT)+":"
@@ -352,10 +359,10 @@ class Main():
         else:
             Hora+="0"+str(SegundosT)
 
-        if keyHora:
-            Hora+=" horas"
+        if keyHora==True:
+            Hora+="] horas"
         else:
-            Hora+=" minutos"
+            Hora+="] minutos"
         print("| ",end="")
         print(Hora)
 
@@ -366,11 +373,6 @@ class Main():
             ListaTemp=ListaEnlazada()
             ListaTemp.Append(Actual.Orden)
             ListaTemp.Append(Actual.NombreCliente)
-            """for i in range(len(Actual.Pizzas)):
-                ListaTemp2=ListaEnlazada()
-                ListaTemp2.Append(Actual.Pizzas[i][0])
-                ListaTemp2.Append(Actual.Pizzas[i][1][0])
-                ListaTemp.Append(ListaTemp2)"""
             ListaTemp.Append(Actual.Pizzas)
             Lista.Append(ListaTemp)
             Actual=Actual.SiguienteOrden
@@ -379,21 +381,6 @@ class Main():
 
             
 Main()
-Li=ListaEnlazada()
-Li.Append("x")
-Li.Append("y")
-Li.Append("z")
-cont=len(Li)-1
-while cont>-1:
-    if cont==(len(Li)-1):
-        print("Ultimo:")
-        print(Li[cont])
-    elif cont==0:
-        print("Primero:")
-        print(Li[cont])
-    else:
-        print(Li[cont])
-    cont-=1
 
 
 

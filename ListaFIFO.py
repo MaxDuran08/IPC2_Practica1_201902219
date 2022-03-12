@@ -47,7 +47,6 @@ class ListaFIFO:
         String="["
         Actual=self.Primero
         while Actual!=None:
-            #String+="("+str(Actual.Posicion)+")"
             String+=str(Actual)
             if Actual.SiguienteOrden!=None:
                 String+=str(", ")
